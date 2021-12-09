@@ -1,0 +1,150 @@
+// STACK -> Last in First Out
+//Push + Pop + Peek + IsEmpty + IsFull
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+typedef struct node stack;
+
+int size(stack *start)
+{
+    int count=0;
+    stack *ptr = start;
+    while(ptr!=NULL)
+    {
+        ptr = ptr -> next;
+        count++;
+    }
+    return count;
+}
+
+int isFull(stack *start, int len)
+{
+    int ans = size(start);
+    if(ans == len)
+        return 1;
+    return 0;
+}
+
+int isEmpty(stack *start)
+{
+    if(start == NULL)
+        return 1;
+    return 0;
+}
+
+stack *push(stack *start, int len)
+{
+    stack *new_node;
+    int data,ans;
+    ans = size(start);
+    if(ans<len)
+    {
+        if(start == NULL)
+        {
+            printf("\nEnter data : ");
+            scanf("%d",&data);
+            new_node = (stack*)malloc(sizeof(stack));   
+            new_node -> data = data;
+            new_node -> next = NULL;
+            start = new_node;
+            return start;
+        }
+        else
+        {
+            printf("\nEnter data : ");
+            scanf("%d",&data);
+            new_node = (stack*)malloc(sizeof(stack));
+            new_node -> data = data;
+            new_node -> next = start;
+            start = new_node;
+            return start;
+        }
+    }
+    else if(isFull(start,len))
+    {
+        printf("\nStack Overflow!");
+        return start;
+    }
+}
+
+stack *pop(stack *start, int len)
+{
+    if(isEmpty(start))
+    {
+        printf("\nStack Underflow");
+        return NULL;
+    }
+    else if(start -> next == NULL)
+    {
+        printf("\nPopped Value : %d",start -> data);
+        return NULL;
+    }
+    else
+    {
+        stack *ptr = start;
+        printf("\nPopped Value : %d",start -> data);
+        start = start -> next;
+        free(ptr);
+        return start;
+    }
+}
+
+void display(stack *start)
+{
+    stack *ptr = start;
+    if(isEmpty(start))
+        printf("\nStack Underflow");
+    else
+    {
+        while(ptr!=NULL)
+        {
+            printf("%d\t", ptr -> data);
+            ptr = ptr -> next;
+        }
+    }
+}
+
+void peek(stack *start)
+{
+    printf("\nPeek Value : %d", start -> data);
+}
+
+int main()
+{
+    stack *start = NULL;
+    int Max,opt;
+    printf("\nEnter length of Stack : ");
+    scanf("%d",&Max);
+    do
+    {
+        printf("\nSTACK MENU:");
+        printf("\n\t1.Push Value");
+        printf("\n\t2.Pop Value");
+        printf("\n\t3.Peek Value");
+        printf("\n\t4.Display Stack");
+        printf("\n\t5.Exit");
+        printf("\nEnter Choice (1-4) : ");
+        scanf("%d",&opt);
+        switch(opt)
+        {
+            case 1: start = push(start,Max);
+                    break;
+            case 2: start = pop(start,Max);
+                    break;
+            case 3: peek(start);
+                    break;
+            case 4: display(start);
+                    break;
+            case 5: printf("\nProgram Terminated");
+                    break;
+            default : printf("\nWrong Choice"); break;
+        }
+    }while(opt!=5);
+    return 0;
+}
