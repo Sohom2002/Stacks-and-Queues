@@ -1,0 +1,153 @@
+//QUEUE -> First in First out
+////Push + Pop + Peek + IsEmpty + IsFull
+
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node             //Creation of node using structure
+{
+    int data;
+    struct node *next;
+};
+typedef struct node queue;
+
+int size(queue *start)     //Determining the current size of the queue
+{
+    int count=0;
+    queue *ptr = start;
+    while(ptr!=NULL)
+    {
+        ptr = ptr -> next;
+        count++;
+    }
+    return count;
+}
+
+int isFull(queue *start, int len)     //checking whether the queue is full or not
+{
+    int ans = size(start);
+    if(ans == len)
+        return 1;
+    return 0;
+}
+
+int isEmpty(queue *start)             //checking whether the queue is empty or not
+{
+    if(start == NULL)
+        return 1;
+    return 0;
+}
+
+queue *push(queue *start, int len)        //pushing value in the queue
+{
+    queue *new_node, *ptr = start;
+    int data,ans;
+    ans = size(start);
+    if(ans<len) //to check whether current length is less than maximum permitted length
+    {
+        if(start == NULL) //for initialising the first node
+        {
+            printf("\nEnter data : ");
+            scanf("%d",&data);
+            new_node = (queue*)malloc(sizeof(queue));   
+            new_node -> data = data;
+            new_node -> next = NULL;
+            start = new_node;
+            return start;
+        }
+        else    //after the first node
+        {
+            printf("\nEnter data : ");
+            scanf("%d",&data);
+            new_node = (queue*)malloc(sizeof(queue));
+            new_node -> data = data;
+            while(ptr -> next != NULL)
+                ptr = ptr -> next;
+            ptr -> next = new_node;
+            new_node -> next = NULL;
+            return start;
+        }
+    }
+    else if(isFull(start,len))   //If queue current lenghth reached max length
+    {
+        printf("\nqueue Overflow!");
+        return start;
+    }
+}
+
+queue *pop(queue *start, int len)
+{
+    if(isEmpty(start))    //if current length is zero
+    {
+        printf("\nqueue Underflow");
+        return NULL;
+    }
+    else if(start -> next == NULL)  //if only one node left
+    {
+        printf("\nPopped Value : %d",start -> data);
+        return NULL;
+    }
+    else
+    {
+        queue *ptr = start;
+        printf("\nPopped Value : %d",start -> data);
+        start = start -> next;
+        free(ptr);
+        return start;
+    }
+}
+
+void display(queue *start)    //display of the queue
+{
+    queue *ptr = start;
+    if(isEmpty(start))
+        printf("\nqueue Underflow");
+    else
+    {
+        while(ptr!=NULL)
+        {
+            printf("%d\t", ptr -> data);
+            ptr = ptr -> next;
+        }
+    }
+}
+
+void peek(queue *start)
+{
+    printf("\nPeek Value : %d", start -> data);
+}
+
+int main()
+{
+    queue *start = NULL;
+    int Max,opt;
+    printf("\nEnter length of queue : ");
+    scanf("%d",&Max);
+    do
+    {
+        printf("\nqueue MENU:");
+        printf("\n\t1.Push Value");
+        printf("\n\t2.Pop Value");
+        printf("\n\t3.Peek Value");
+        printf("\n\t4.Display queue");
+        printf("\n\t5.Exit");
+        printf("\nEnter Choice (1-4) : ");
+        scanf("%d",&opt);
+        switch(opt)
+        {
+            case 1: start = push(start,Max);
+                    break;
+            case 2: start = pop(start,Max);
+                    break;
+            case 3: peek(start);
+                    break;
+            case 4: display(start);
+                    break;
+            case 5: printf("\nProgram Terminated");
+                    break;
+            default : printf("\nWrong Choice"); break;
+        }
+    }while(opt!=5);
+    return 0;
+}
