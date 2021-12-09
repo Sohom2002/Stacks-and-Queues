@@ -1,0 +1,159 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+typedef struct node cq;
+
+int size(cq *start)
+{
+    int count=0;
+    cq *ptr = start;
+    if(start == NULL)
+        return count;
+    else
+    {    
+        while(ptr -> next != start)
+        {    
+            ptr = ptr -> next;
+            count++;
+        }
+        count++;
+        return count;
+    }
+}
+
+int isFull(cq *start, int max)
+{
+    int len = size(start);
+    if(len==max)
+        return 1;
+    return 0;
+}
+
+int isEmpty(cq *start)
+{
+    int len = size(start);
+    if(len == 0)
+        return 1;
+    return 0;
+}
+
+cq *push(cq *start, int max)
+{
+    int len = size(start),data;
+    cq *new_node, *ptr = start;
+    if(len<max)
+    {
+        if(start == NULL)
+        {
+            printf("\nEnter data : ");
+            scanf("%d",&data);
+            new_node = (cq*)malloc(sizeof(cq));
+            new_node -> data = data;
+            new_node -> next = new_node;
+            start = new_node;
+            return start;
+        }
+        else
+        {
+            printf("\nEnter data : ");
+            scanf("%d",&data);
+            new_node = (cq*)malloc(sizeof(cq));
+            new_node -> data = data;
+            while(ptr -> next != start)
+                ptr = ptr -> next;
+            ptr -> next = new_node;
+            new_node -> next = start;
+            return start;
+        }
+    }
+    else if(isFull(start,max))
+    {
+        printf("\nCircular Queue Overflow!");
+        return start;
+    }
+}
+
+cq *pop(cq *start, int max)
+{
+    if(isEmpty(start))
+    {
+        printf("\nCircular queue underflow!");
+        return NULL;
+    }
+    else if(start -> next == start)
+    {
+        printf("\nPopped Value : %d", start -> data);
+        return NULL;
+    }
+    else
+    {
+        cq *ptr = start;
+        while(ptr -> next != start)
+            ptr = ptr -> next;
+        printf("\nPopped Value : %d", start -> data);
+        ptr -> next = start -> next;
+        free(start);
+        start = ptr -> next;
+        return start;
+    }
+}
+
+void display(cq *start)
+{
+    if(isEmpty(start))
+        printf("\nCircular queue underflow!");
+    else
+    {
+        cq *ptr = start;
+        while(ptr -> next != start)
+        {
+            printf("%d\t",ptr -> data);
+            ptr = ptr -> next;
+        }
+        printf("%d",ptr -> data);
+    }
+}
+
+void peek(cq *start)
+{
+    printf("\nPeek Value : %d", start -> data);
+}
+
+int main()
+{
+    cq *start = NULL;
+    int Max,opt;
+    printf("\nEnter length of queue : ");
+    scanf("%d",&Max);
+    do
+    {
+        printf("\nqueue MENU:");
+        printf("\n\t1.Push Value");
+        printf("\n\t2.Pop Value");
+        printf("\n\t3.Peek Value");
+        printf("\n\t4.Display queue");
+        printf("\n\t5.Exit");
+        printf("\nEnter Choice (1-5) : ");
+        scanf("%d",&opt);
+        switch(opt)
+        {
+            case 1: start = push(start,Max);
+                    break;
+            case 2: start = pop(start,Max);
+                    break;
+            case 3: peek(start);
+                    break;
+            case 4: display(start);
+                    break;
+            case 5: printf("\nProgram Terminated");
+                    break;
+            default : printf("\nWrong Choice"); break;
+        }
+    }while(opt!=5);
+    return 0;
+}
